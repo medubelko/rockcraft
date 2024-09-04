@@ -235,12 +235,69 @@ class Project(BuildPlanner, BaseProject):  # type: ignore[misc]
     entrypoint_service: str | None = None
     platforms: dict[str, Platform | None]  # type: ignore[assignment]
 
+    # Option 1
+    # 
+    # Pros:
+    # - All doc material is kept in one place.
+    # - Separation of concerns. Docs don't interfere with functional properties #   nor impose opinions on how standard properties like `description` 
+    #   should be used.
+    # 
+    # Cons:
+    # - All of the content is dumped into the JSON, and JSON isn't designed for
+    #   multi-line strings.
+    # - Ignores `description` and `examples`, which some systems might consider 
+    #   to be standard properties.
+    exampleProperty1: str = pydantic.Field(
+        default="foo",
+        json_schema_extra={
+            "docDescriptionShort": "One-line description of the purpose and effect of the key.",
+            "docDescriptionLong": """Multi-line description of the purpose and usage of the key, with as much detail as is required.
+            
+            Written in Markdown.
+            """,
+            "docParentKey": "Parent key", # determine procedurally?
+            "docVersionAdded": "1.2.3",
+            "docValues": """Plain-English breakdown of accepted values and constraints.
+            
+            Written in Markdown.
+            """,
+            "docExamples": """Example usage of the key, with values.
+            
+            Written in YAML.
+            """,
+        }
+    )
+
+    # Option 2
+    # 
+    # Pros:
+    # - Less verbose.
+    # 
+    # Cons:
+    # - Requires `extra="allow` and `frozen=False` in `model_config`.
+    # - Mixes doc properties with regular properties.
+    # - A single-line `examples` is too short to be of use for many keys.
+    exampleProperty2: str = pydantic.Field(
+        default="foo",
+        description="One-line description of the purpose and effect of the key.",
+        examples="Example usage of key.",
+        docDescriptionLong="""Multi-line description of the purpose and effect of the key, with as much detail as is required.
+        
+        Written in Markdown.""",
+        docParentKey="Parent key", # determine procedurally?
+        docVersionAdded="1.2.3",
+        docValues="""Plain-English breakdown of accepted values and constraints.
+        
+        Written in Markdown.
+        """,
+    )
+
     model_config = pydantic.ConfigDict(
         validate_assignment=True,
-        extra="forbid",
+        extra="allow",
         populate_by_name=True,
         alias_generator=alias_generator,
-        frozen=True,
+        frozen=False,
     )
 
     @override
