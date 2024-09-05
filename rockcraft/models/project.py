@@ -247,7 +247,7 @@ class Project(BuildPlanner, BaseProject):  # type: ignore[misc]
     #   multi-line strings.
     # - Ignores `description` and `examples`, which some systems might consider 
     #   to be standard properties.
-    exampleProperty1: str = pydantic.Field(
+    exampleField1: str = pydantic.Field(
         default="foo",
         json_schema_extra={
             "docDescriptionShort": "One-line description of the purpose and effect of the key.",
@@ -277,7 +277,7 @@ class Project(BuildPlanner, BaseProject):  # type: ignore[misc]
     # - Requires `extra="allow` and `frozen=False` in `model_config`.
     # - Mixes doc properties with regular properties.
     # - A single-line `examples` is too short to be of use for many keys.
-    exampleProperty2: str = pydantic.Field(
+    exampleField2: str = pydantic.Field(
         default="foo",
         description="One-line description of the purpose and effect of the key.",
         examples="Example usage of key.",
