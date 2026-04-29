@@ -34,10 +34,6 @@ jobs:
     runs-on: [self-hosted, spread-installed]
     needs: [snap-build]
     timeout-minutes: 90
-    strategy:
-      fail-fast: false
-      matrix:
-        system: ${{ fromJSON(needs.spread-select.outputs.systems) }}
 
     steps:
       - name: Cleanup job workspace
