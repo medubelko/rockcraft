@@ -31,8 +31,8 @@ jobs:
   test:
     uses: canonical/starflow/.github/workflows/test-python.yaml@main
     needs: filter
+    if: ${{ needs.filter.output.source-files == 'true' }}
     with:
-      source-files: ${{ needs.filter.output.source-files }}
       lowest-python-version: ""
       fast-test-platforms: '["ubuntu-22.04", "ubuntu-24.04"]'
       fast-test-python-versions: '["3.10", "3.12"]'
